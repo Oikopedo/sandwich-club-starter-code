@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,10 +26,15 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         ImageView ingredientsIv = findViewById(R.id.image_iv);
-        TextView  origin =findViewById(R.id.origin_tv);
-        TextView  description = findViewById(R.id.description_tv);
-        TextView  ingredients = findViewById(R.id.ingredients_tv);
-        TextView alsoKnownAs = findViewById(R.id.also_known_tv);
+
+
+        TextView  originTv =findViewById(R.id.origin_tv);
+        TextView  descriptionTv = findViewById(R.id.description_tv);
+        TextView  ingredientsTv = findViewById(R.id.ingredients_tv);
+        TextView alsoKnownTv = findViewById(R.id.also_known_tv);
+
+        TextView origin = findViewById(R.id.origin);
+        TextView  description = findViewById(R.id.description);
 
         Intent intent = getIntent();
         if (intent == null) {
@@ -55,21 +61,33 @@ public class DetailActivity extends AppCompatActivity {
         Picasso.with(this)
                 .load(sandwich.getImage())
                 .into(ingredientsIv);
-        origin.setText(sandwich.getPlaceOfOrigin());
-        description.setText(sandwich.getDescription());
-        ingredients.setText(listStringToString(sandwich.getIngredients()));
-        alsoKnownAs.setText(listStringToString(sandwich.getAlsoKnownAs()));
+        decideVisibility(origin,originTv,sandwich.getPlaceOfOrigin());
+        decideVisibility(description,descriptionTv,sandwich.getDescription());
+        descriptionTv.setText(sandwich.getDescription());
+        ingredientsTv.setText(listStringToString(sandwich.getIngredients()));
+        alsoKnownTv.setText(listStringToString(sandwich.getAlsoKnownAs()));
         //Log.v("aa",sandwich.getPlaceOfOrigin());
 
         setTitle(sandwich.getMainName());
     }
 
     private String listStringToString(List<String> list) {
-        String res="\n";
+        String res="";
         for (String s:list){
             res+=s+"\n";
         }
         return res;
+    }
+
+    private void decideVisibility(TextView text,TextView fromSandwitch,String s){
+        if (s.contentEquals("")){
+            text.setVisibility(View.INVISIBLE);
+            fromSandwitch.setVisibility(View.INVISIBLE);
+        }else{
+            text.setVisibility(View.VISIBLE);
+            fromSandwitch.setVisibility(View.VISIBLE);
+            fromSandwitch.setText(s);
+        }
     }
 
     private void closeOnError() {
