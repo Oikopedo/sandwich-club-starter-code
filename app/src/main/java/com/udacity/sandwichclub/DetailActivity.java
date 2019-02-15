@@ -3,12 +3,16 @@ package com.udacity.sandwichclub;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.udacity.sandwichclub.model.Sandwich;
 import com.udacity.sandwichclub.utils.JsonUtils;
+
+import java.util.List;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -21,6 +25,10 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         ImageView ingredientsIv = findViewById(R.id.image_iv);
+        TextView  origin =findViewById(R.id.origin_tv);
+        TextView  description = findViewById(R.id.description_tv);
+        TextView  ingredients = findViewById(R.id.ingredients_tv);
+        TextView alsoKnownAs = findViewById(R.id.also_known_tv);
 
         Intent intent = getIntent();
         if (intent == null) {
@@ -47,8 +55,21 @@ public class DetailActivity extends AppCompatActivity {
         Picasso.with(this)
                 .load(sandwich.getImage())
                 .into(ingredientsIv);
+        origin.setText(sandwich.getPlaceOfOrigin());
+        description.setText(sandwich.getDescription());
+        ingredients.setText(listStringToString(sandwich.getIngredients()));
+        alsoKnownAs.setText(listStringToString(sandwich.getAlsoKnownAs()));
+        //Log.v("aa",sandwich.getPlaceOfOrigin());
 
         setTitle(sandwich.getMainName());
+    }
+
+    private String listStringToString(List<String> list) {
+        String res="\n";
+        for (String s:list){
+            res+=s+"\n";
+        }
+        return res;
     }
 
     private void closeOnError() {
