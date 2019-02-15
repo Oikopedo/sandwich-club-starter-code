@@ -3,12 +3,17 @@ package com.udacity.sandwichclub;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.udacity.sandwichclub.model.Sandwich;
 import com.udacity.sandwichclub.utils.JsonUtils;
+
+import java.util.List;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -21,6 +26,15 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         ImageView ingredientsIv = findViewById(R.id.image_iv);
+        TextView  originTv =findViewById(R.id.origin_tv);
+        TextView  descriptionTv = findViewById(R.id.description_tv);
+        TextView  ingredientsTv = findViewById(R.id.ingredients_tv);
+        TextView alsoKnownTv = findViewById(R.id.also_known_tv);
+
+        TextView  origin =findViewById(R.id.origin);
+        TextView  description = findViewById(R.id.description);
+        TextView  ingredients = findViewById(R.id.ingredients);
+        TextView alsoKnown = findViewById(R.id.also_known);
 
         Intent intent = getIntent();
         if (intent == null) {
@@ -47,8 +61,32 @@ public class DetailActivity extends AppCompatActivity {
         Picasso.with(this)
                 .load(sandwich.getImage())
                 .into(ingredientsIv);
+        decideVisibity(origin,originTv,sandwich.getPlaceOfOrigin());
+        decideVisibity(description,descriptionTv,sandwich.getDescription());
+        decideVisibity(ingredients,ingredientsTv,listStringToString(sandwich.getIngredients()));
+        decideVisibity(alsoKnown,alsoKnownTv,listStringToString(sandwich.getAlsoKnownAs()));
+        //Log.v("aa",sandwich.getPlaceOfOrigin());
 
         setTitle(sandwich.getMainName());
+    }
+
+    private String listStringToString(List<String> list) {
+        String res="";
+        for (String s:list){
+            res+=s+"\n";
+        }
+        return res;
+    }
+
+    private void decideVisibity(TextView text,TextView data,String sandwitchAttr){
+        if (sandwitchAttr.contentEquals("")){
+            text.setVisibility(View.INVISIBLE);
+            data.setVisibility(View.INVISIBLE);
+        }else{
+            text.setVisibility(View.VISIBLE);
+            data.setVisibility(View.VISIBLE);
+            data.setText(sandwitchAttr);
+        }
     }
 
     private void closeOnError() {
